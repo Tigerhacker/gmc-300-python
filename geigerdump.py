@@ -15,14 +15,14 @@ import serial
 import struct
 import binascii
 
-print 'getting version...'
-s = serial.Serial( "/dev/tty.usbserial", 57600 )
-s.write("<GETVER>>")
+print('getting version...')
+s = serial.Serial( "/dev/ttyUSB0", 57600 )
+s.write(b"<GETVER>>")
 version = s.read(14)
-print version
+print(version)
 
 for i in range(0, 15):
-  s.write("<SPIR")
+  s.write(b"<SPIR")
 
   s.write(struct.pack('B', ((i * 4096) >> 16) & 0x00ff )) # msb
   s.write(struct.pack('B', ((i * 4096) >> 8) & 0x00ff ))
@@ -31,7 +31,7 @@ for i in range(0, 15):
   s.write(struct.pack('B', (4096 >> 8) & 0x00ff )) # lsb
   s.write(struct.pack('B', (4096 >> 0) & 0x00ff )) # msb
 
-  s.write(">>")
+  s.write(b">>")
 
   print('reading mem location ' + str(i))
 
@@ -39,7 +39,7 @@ for i in range(0, 15):
   while i < 2048:
     if s.inWaiting() > 0: # check if there is a byte waiting
       r = struct.unpack('B', s.read(1))[0] #read the two bytes and unpack binary as hex and reverse them
-      print r
+      print(r)
       i = i + 1
 
 
